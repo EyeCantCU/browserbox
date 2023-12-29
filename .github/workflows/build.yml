@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser_name: [brave]
+        browser_name: [brave, firefox]
         image_name: [browserbox]
     steps:
       # Checkout push-to-registry action GitHub repository
@@ -61,7 +61,11 @@ jobs:
 
       - name: Set image name
         run: |
-          echo "IMAGE_NAME=${{ matrix.browser_name }}box" >> $GITHUB_ENV
+          if [[ "${{ matrix.browser_name }}" == "firefox" ]]; then
+            echo "IMAGE_NAME=firebox" >> $GITHUB_ENV
+          else
+            echo "IMAGE_NAME=${{ matrix.browser_name }}box" >> $GITHUB_ENV
+          fi
 
       # Build metadata
       - name: Image Metadata
