@@ -22,6 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        browser_name: [brave]
         image_name: [browserbox]
     steps:
       # Checkout push-to-registry action GitHub repository
@@ -58,15 +59,19 @@ jobs:
           done
           echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
 
+      - name: Set image name
+        run: |
+          echo "IMAGE_NAME=${{ matrix.browser_name }}box" >> $GITHUB_ENV
+
       # Build metadata
       - name: Image Metadata
         uses: docker/metadata-action@v5
         id: meta
         with:
           images: |
-            ${{ matrix.image_name }}
+            ${{ env.IMAGE_NAME }}
           labels: |
-            org.opencontainers.image.title=${{ matrix.image_name }}
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
             org.opencontainers.image.version=latest
             org.opencontainers.image.description=Browser images for Distrobox.
             io.artifacthub.package.readme-url=https://github.com/${{ github.repository_owner }}/browserbox#readme
@@ -78,13 +83,16 @@ jobs:
         with:
           containerfiles: |
             ./Containerfile
-          image: ${{ matrix.image_name }}
+          image: ${{ env.IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
+          build-args: |
+            BROWSER_NAME=${{ matrix.browser_name }}
+            IMAGE_NAME=${{ env.IMAGE_NAME }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: true
           extra-args: |
-            --target=${{ matrix.image_name }}
+            --target=${{ matrix.base_name }}
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
       # https://github.com/macbre/push-to-ghcr/issues/12
@@ -114,7 +122,7 @@ jobs:
       - name: Sign image
         uses: ./sign
         with:
-          containers: ${{ matrix.image_name }}
+          containers: ${{ env.IMAGE_NAME }}
           registry: ghcr.io/${{ github.repository_owner }}
           registry-token: ${{ secrets.GITHUB_TOKEN }}
           signing-secret: ${{ secrets.SIGNING_SECRET }}
@@ -123,7 +131,7 @@ jobs:
       - name: Verify image
         uses: ./verify
         with:
-          containers: ${{ matrix.image_name }}
+          containers: ${{ env.IMAGE_NAME }}
           pubkey: ./cosign.pub
           registry: ghcr.io/${{ github.repository_owner }}
 
