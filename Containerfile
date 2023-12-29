@@ -2,20 +2,33 @@ FROM quay.io/toolbx-images/ubuntu-toolbox:latest AS browserbox
 
 ARG BROWSER_NAME="${BROWSER_NAME:-brave}"
 
+# Use apt user for browser installation
+RUN echo "_apt ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+USER _apt
+
+# Install browser
 RUN case "$BROWSER_NAME" in \
     brave) \
-      curl -fsSLo "/usr/share/keyrings/brave-browser-archive-keyring.gpg" https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
+      sudo curl -fsSLo "/usr/share/keyrings/brave-browser-archive-keyring.gpg" https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
       echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | \
-      tee "/etc/apt/sources.list.d/brave-browser-release.list" && \
-      apt update -y && \
-      apt install -y brave-browser \
+      sudo tee "/etc/apt/sources.list.d/brave-browser-release.list" && \
+      sudo apt update -y && \
+      sudo apt install -y brave-browser \
       ;; \
     firefox) \
-      apt install -y software-properties-common && \
-      add-apt-repository ppa:mozillateam/ppa && \
+      sudo apt install -y software-properties-common && \
+      sudo add-apt-repository ppa:mozillateam/ppa && \
       echo "Package: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001" | \
-      tee "/etc/apt/preferences.d/mozilla-firefox" && \
-      apt update -y && \
-      apt install -y firefox \
+      sudo tee "/etc/apt/preferences.d/mozilla-firefox" && \
+      sudo apt update -y && \
+      sudo apt install -y firefox \
       ;; \
     esac
+
+# Return to root user
+USER root
+
+# Cleanup
+RUN sed -i '/_apt ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers
