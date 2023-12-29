@@ -24,7 +24,6 @@ jobs:
       matrix:
         browser_name: [brave, chrome, chromium, firefox, floorp]
         engine_type: [blink, gecko]
-        image_name: [browserbox]
         exclude:
           - browser_name: brave
             engine_type: gecko
@@ -108,7 +107,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           oci: true
           extra-args: |
-            --target=${{ matrix.base_name }}
+            --target=browserbox
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
       # https://github.com/macbre/push-to-ghcr/issues/12
