@@ -17,6 +17,13 @@ RUN sudo apt update -y && \
       sudo apt update -y && \
       sudo apt install -y brave-browser \
       ;; \
+    chrome) \
+      sudo curl -fsSLo "/etc/apt/keyrings/linux_signing_key.pub" https://dl-ssl.google.com/linux/linux_signing_key.pub && \
+      echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/linux_signing_key.pub] http://dl.google.com/linux/chrome/deb/ stable main" | \
+      sudo tee "/etc/apt/sources.list.d/google-chrome.list" && \
+      sudo apt update -y && \
+      sudo apt install -y google-chrome-stable \
+      ;; \
     firefox) \
       sudo apt install -y software-properties-common && \
       sudo add-apt-repository ppa:mozillateam/ppa && \
