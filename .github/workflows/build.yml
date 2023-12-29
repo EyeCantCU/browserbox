@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser_name: [brave, firefox]
+        browser_name: [brave, firefox, floorp]
         image_name: [browserbox]
     steps:
       # Checkout push-to-registry action GitHub repository
