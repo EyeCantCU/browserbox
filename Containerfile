@@ -10,7 +10,11 @@ USER _apt
 
 # Install browser
 RUN sudo apt update -y && \
-    sudo apt install -y fonts-recommended && \
+    sudo apt install -y \
+      pipewire \
+      wireplumber \
+      libspa-0.2-bluetooth \
+      fonts-recommended && \
     if [[ "$ENGINE_TYPE" == "blink" ]]; then \
       echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | \
       sudo debconf-set-selections && \
