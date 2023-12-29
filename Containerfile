@@ -1,6 +1,7 @@
 FROM quay.io/toolbx-images/ubuntu-toolbox:latest AS browserbox
 
 ARG BROWSER_NAME="${BROWSER_NAME:-brave}"
+ARG ENGINE_TYPE="${ENGINE_TYPE:-blink}"
 
 # Use apt user for browser installation
 RUN echo "_apt ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \

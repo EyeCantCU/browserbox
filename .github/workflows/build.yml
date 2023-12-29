@@ -23,7 +23,19 @@ jobs:
       fail-fast: false
       matrix:
         browser_name: [brave, chrome, chromium, firefox, floorp]
+        engine_type: [blink, gecko]
         image_name: [browserbox]
+        exclude:
+          - browser_name: brave
+            engine_type: gecko
+          - browser_name: chrome
+            engine_type: gecko
+          - browser_name: chromium
+            engine_type: gecko
+          - browser_name: firefox
+            engine_type: blink
+          - browser_name: floorp
+            engine_type: blink
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
