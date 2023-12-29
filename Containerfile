@@ -11,10 +11,12 @@ USER _apt
 # Install browser
 RUN sudo apt update -y && \
     sudo apt install -y \
+      dmz-cursor-theme \
       pipewire \
       wireplumber \
       libspa-0.2-bluetooth \
       fonts-recommended && \
+    sudo update-alternatives --set x-cursor-theme /usr/share/icons/DMZ-Black/cursor.theme && \
     if [[ "$ENGINE_TYPE" == "blink" ]]; then \
       echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | \
       sudo debconf-set-selections && \
