@@ -120,7 +120,7 @@ jobs:
             --disable-content-trust
 
       - name: Sign image
-        uses: ./sign
+        uses: EyeCantCU/cosign-action/sign@v0.2.1
         with:
           containers: ${{ env.IMAGE_NAME }}
           registry: ghcr.io/${{ github.repository_owner }}
@@ -129,7 +129,7 @@ jobs:
           tags: ${{ steps.push.outputs.digest }}
 
       - name: Verify image
-        uses: ./verify
+        uses: EyeCantCU/cosign-action/verify@v0.2.1
         with:
           containers: ${{ env.IMAGE_NAME }}
           pubkey: ./cosign.pub
