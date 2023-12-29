@@ -8,7 +8,8 @@ RUN echo "_apt ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
 USER _apt
 
 # Install browser
-RUN case "$BROWSER_NAME" in \
+RUN sudo apt update -y && \
+    case "$BROWSER_NAME" in \
     brave) \
       sudo curl -fsSLo "/usr/share/keyrings/brave-browser-archive-keyring.gpg" https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
       echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | \
