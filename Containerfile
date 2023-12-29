@@ -10,6 +10,7 @@ USER _apt
 
 # Install browser
 RUN sudo apt update -y && \
+    sudo apt install -y fonts-recommended && \
     if [[ "$ENGINE_TYPE" == "blink" ]]; then \
       echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | \
       sudo debconf-set-selections && \
