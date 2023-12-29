@@ -1,4 +1,4 @@
-FROM quay.io/toolbx-images/ubuntu-toolbox:latest AS browserbox
+FROM quay.io/toolbx-images/ubuntu-toolbox:22.04 AS browserbox
 
 ARG BROWSER_NAME="${BROWSER_NAME:-brave}"
 ARG ENGINE_TYPE="${ENGINE_TYPE:-blink}"
