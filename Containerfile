@@ -10,6 +10,11 @@ USER _apt
 
 # Install browser
 RUN sudo apt update -y && \
+    if [[ "$ENGINE_TYPE" == "blink" ]]; then \
+      echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | \
+      sudo debconf-set-selections && \
+      sudo apt install -y ttf-mscorefonts-installer \
+    ; fi && \
     case "$BROWSER_NAME" in \
     brave) \
       sudo curl -fsSLo "/usr/share/keyrings/brave-browser-archive-keyring.gpg" https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
