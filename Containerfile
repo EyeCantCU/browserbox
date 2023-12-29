@@ -24,6 +24,9 @@ RUN sudo apt update -y && \
       sudo apt update -y && \
       sudo apt install -y google-chrome-stable \
       ;; \
+    chromium) \
+      sudo apt install -y chromium-browser \
+      ;; \
     firefox) \
       sudo apt install -y software-properties-common && \
       sudo add-apt-repository ppa:mozillateam/ppa && \
