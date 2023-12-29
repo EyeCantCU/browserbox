@@ -1,5 +1,10 @@
 name: Build Browserbox
 on:
+  schedule:
+    - cron: '00 08 * * *'
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
