@@ -47,5 +47,11 @@ browserbox() {
   esac
   distrobox create -i ghcr.io/eyecantcu/$IMAGE_NAME -n $IMAGE_NAME --yes --nvidia
   distrobox enter -n $IMAGE_NAME -- 'bash -c "distrbox-export --app $BROWSER_NAME"'
+
+  DESKTOP_PATH="~/.local/share/applications"
+  DESKTOP_FILE="$DESKTOP_PATH"/"$IMAGE_NAME"-"$BROWSER_NAME".desktop
+  TARGET_DESKTOP_FILE="$DESKTOP_PATH"/"$BROWSER_NAME".desktop
+
+  mv "$DESKTOP_FILE" "$TARGET_DESKTOP_FILE"
 }
 browserbox "${1}"
