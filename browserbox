@@ -46,7 +46,7 @@ browserbox() {
       ;;
   esac
   distrobox create -i ghcr.io/eyecantcu/$IMAGE_NAME -n $IMAGE_NAME --yes --nvidia
-  distrobox enter -n $IMAGE_NAME -- 'bash -c "distrbox-export --app $BROWSER_NAME"'
+  distrobox enter -n $IMAGE_NAME -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER_NAME"'
 
   DESKTOP_PATH="~/.local/share/applications"
   DESKTOP_FILE="$DESKTOP_PATH"/"$IMAGE_NAME"-"$BROWSER_NAME".desktop
