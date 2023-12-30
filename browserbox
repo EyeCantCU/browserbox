@@ -1,0 +1,45 @@
+#!/usr/bin/bash
+
+__menu="
+Available browsers:
+1. Brave
+2. Chrome
+3. Chromium
+4. Firefox
+5. Floorp
+"
+
+browserbox() {
+  if [[ -z "${1}" ]]; then
+    echo "$__menu"
+    read -p "Select browser: " BROWSER
+  else
+    BROWSER="${1}"
+  fi
+
+  BROWSER=$(echo "$BROWSER" | awk '{print tolower($0)}')
+
+  case "$BROWSER" in
+    1|brave)
+      IMAGE_NAME="bravebox"
+      ;;
+    2|chrome)
+      IMAGE_NAME="chromebox"
+      ;;
+    3|chromium)
+      IMAGE_NAME="chromiumbox"
+      ;;
+    4|firefox)
+      IMAGE_NAME="firebox"
+      ;;
+    5|floorp)
+      IMAGE_NAME="floorpbox"
+      ;;
+    *)
+      echo "Invalid option selected. Opening menu..."
+      browserbox
+      ;;
+  esac
+  distrobox create -i ghcr.io/eyecantcu/$IMAGE_NAME -n $IMAGE_NAME --yes --nvidia
+}
+browserbox "${1}"
