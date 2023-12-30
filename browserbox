@@ -22,18 +22,23 @@ browserbox() {
   case "$BROWSER" in
     1|brave)
       IMAGE_NAME="bravebox"
+      BROWSER_NAME="brave-browser"
       ;;
     2|chrome)
       IMAGE_NAME="chromebox"
+      BROWSER_NAME="chrome-browser"
       ;;
     3|chromium)
       IMAGE_NAME="chromiumbox"
+      BROWSER_NAME="chromium-browser"
       ;;
     4|firefox)
       IMAGE_NAME="firebox"
+      BROWSER_NAME="firefox"
       ;;
     5|floorp)
       IMAGE_NAME="floorpbox"
+      BROWSER_NAME="floorp"
       ;;
     *)
       echo "Invalid option selected. Opening menu..."
@@ -41,5 +46,6 @@ browserbox() {
       ;;
   esac
   distrobox create -i ghcr.io/eyecantcu/$IMAGE_NAME -n $IMAGE_NAME --yes --nvidia
+  distrobox enter -n $IMAGE_NAME -- 'bash -c "distrbox-export --app $BROWSER_NAME"'
 }
 browserbox "${1}"
