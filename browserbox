@@ -65,8 +65,8 @@ browserbox() {
       ;;
   esac
 
-  if grep -qv "$IMAGE_NAME" <<< $(distrobox list); then
-    distrobox rm -f "$IMAGE_NAME"
+  if grep -qz "$IMAGE_NAME" <<< $(distrobox list); then
+    distrobox rm -f "$IMAGE_NAME" 2>/dev/null || true
   fi
   distrobox create -i ghcr.io/eyecantcu/"$IMAGE_NAME" -n "$IMAGE_NAME" --yes --nvidia
 
