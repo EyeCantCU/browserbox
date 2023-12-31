@@ -10,6 +10,7 @@ Available browsers:
 "
 
 browserbox() {
+  blink_fixes=0
   wayland_fixes=0
 
   for arg in "$@"; do
@@ -34,14 +35,17 @@ browserbox() {
     1 | brave)
       IMAGE_NAME="bravebox"
       BROWSER_NAME="brave-browser"
+      blink_fixes="1"
       ;;
     2 | chrome)
       IMAGE_NAME="chromebox"
       BROWSER_NAME="chrome-browser"
+      blink_fixes="1"
       ;;
     3 | chromium)
       IMAGE_NAME="chromiumbox"
       BROWSER_NAME="chromium-browser"
+      blink_fixes="1"
       ;;
     4 | firefox)
       IMAGE_NAME="firebox"
@@ -57,7 +61,12 @@ browserbox() {
       ;;
   esac
   distrobox create -i ghcr.io/eyecantcu/"$IMAGE_NAME" -n "$IMAGE_NAME" --yes --nvidia
-  distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER"'
+
+  if [[ "$blink_fixes" -eq "1" && "$wayland_fixes" -eq "1" ]]; then
+    distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER --extra-flags \"--ozone-platform=wayland --disable-features=WaylandFractionalScaleV1\""'
+  else
+    distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER"'
+  fi
 
   if [[ "$wayland_fixes" -eq "1" ]]; then
     DESKTOP_PATH="~/.local/share/applications"
