@@ -64,16 +64,20 @@ browserbox() {
       browserbox
       ;;
   esac
+
+  if grep -qv "$IMAGE_NAME" <<< $(distrobox list); then
+    distrobox rm -f "$IMAGE_NAME"
+  fi
   distrobox create -i ghcr.io/eyecantcu/"$IMAGE_NAME" -n "$IMAGE_NAME" --yes --nvidia
 
   DESKTOP_PATH="~/.local/share/applications"
   DESKTOP_FILE="$DESKTOP_PATH"/"$IMAGE_NAME"-"$BROWSER_NAME".desktop
 
   if [[ "$blink_fixes" -eq "1" && "$wayland_fixes" -eq "1" ]]; then
-    distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER --extra-flags \"--ozone-platform=wayland --disable-features=WaylandFractionalScaleV1\""'
+    distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER_NAME --extra-flags \"--ozone-platform=wayland --disable-features=WaylandFractionalScaleV1\""'
     sed -i 's/ \/bin\/sh -l -c //' "$DESKTOP_FILE"
   else
-    distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER"'
+    distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER_NAME"'
   fi
 
   if [[ "$wayland_fixes" -eq "1" ]]; then
