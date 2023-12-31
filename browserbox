@@ -10,33 +10,44 @@ Available browsers:
 "
 
 browserbox() {
-  if [[ -z "${1}" ]]; then
+  wayland_fixes=0
+
+  for arg in "$@"; do
+    case "$arg" in
+      -w | --wayland)
+        wayland_fixes=1
+        ;;
+      *)
+        BROWSER="$arg"
+        ;;
+    esac
+  done
+
+  if [[ -z "$BROWSER" ]]; then
     echo "$__menu"
     read -p "Select browser: " BROWSER
-  else
-    BROWSER="${1}"
   fi
 
   BROWSER=$(echo "$BROWSER" | awk '{print tolower($0)}')
 
   case "$BROWSER" in
-    1|brave)
+    1 | brave)
       IMAGE_NAME="bravebox"
       BROWSER_NAME="brave-browser"
       ;;
-    2|chrome)
+    2 | chrome)
       IMAGE_NAME="chromebox"
       BROWSER_NAME="chrome-browser"
       ;;
-    3|chromium)
+    3 | chromium)
       IMAGE_NAME="chromiumbox"
       BROWSER_NAME="chromium-browser"
       ;;
-    4|firefox)
+    4 | firefox)
       IMAGE_NAME="firebox"
       BROWSER_NAME="firefox"
       ;;
-    5|floorp)
+    5 | floorp)
       IMAGE_NAME="floorpbox"
       BROWSER_NAME="floorp"
       ;;
@@ -45,13 +56,15 @@ browserbox() {
       browserbox
       ;;
   esac
-  distrobox create -i ghcr.io/eyecantcu/$IMAGE_NAME -n $IMAGE_NAME --yes --nvidia
-  distrobox enter -n $IMAGE_NAME -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER_NAME"'
+  distrobox create -i ghcr.io/eyecantcu/"$IMAGE_NAME" -n "$IMAGE_NAME" --yes --nvidia
+  distrobox enter -n "$IMAGE_NAME" -- 'bash -c "sudo locale-gen && distrbox-export --app $BROWSER"'
 
-  DESKTOP_PATH="~/.local/share/applications"
-  DESKTOP_FILE="$DESKTOP_PATH"/"$IMAGE_NAME"-"$BROWSER_NAME".desktop
-  TARGET_DESKTOP_FILE="$DESKTOP_PATH"/"$BROWSER_NAME".desktop
+  if [[ "$wayland_fixes" -eq "1" ]]; then
+    DESKTOP_PATH="~/.local/share/applications"
+    DESKTOP_FILE="$DESKTOP_PATH"/"$IMAGE_NAME"-"$BROWSER_NAME".desktop
+    TARGET_DESKTOP_FILE="$DESKTOP_PATH"/"$BROWSER_NAME".desktop
 
-  mv "$DESKTOP_FILE" "$TARGET_DESKTOP_FILE"
+    mv "$DESKTOP_FILE" "$TARGET_DESKTOP_FILE"
+  fi
 }
-browserbox "${1}"
+browserbox "$@"
