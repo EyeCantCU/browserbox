@@ -12,12 +12,16 @@ Available browsers:
 browserbox() {
   blink_fixes=0
   default_browser=0
+  replace=0
   wayland_fixes=0
 
   for arg in "$@"; do
     case "$arg" in
       -d | --default)
         default_browser=1
+        ;;
+      -r | --replace)
+        replace=1
         ;;
       -w | --wayland)
         wayland_fixes=1
@@ -66,9 +70,13 @@ browserbox() {
   esac
 
   if grep -qz "$IMAGE_NAME" <<< $(distrobox list); then
-    distrobox rm -f "$IMAGE_NAME" 2>/dev/null || true
+    if [[ "$replace" -eq "1" ]]; then
+      distrobox rm -f "$IMAGE_NAME" 2>/dev/null || true
+      distrobox create -i ghcr.io/eyecantcu/"$IMAGE_NAME" -n "$IMAGE_NAME" --yes --nvidia
+    fi
+  else
+    distrobox create -i ghcr.io/eyecantcu/"$IMAGE_NAME" -n "$IMAGE_NAME" --yes --nvidia
   fi
-  distrobox create -i ghcr.io/eyecantcu/"$IMAGE_NAME" -n "$IMAGE_NAME" --yes --nvidia
 
   DESKTOP_PATH="~/.local/share/applications"
   DESKTOP_FILE="$DESKTOP_PATH"/"$IMAGE_NAME"-"$BROWSER_NAME".desktop
