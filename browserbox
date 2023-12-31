@@ -74,8 +74,10 @@ browserbox() {
 
   if [[ "$wayland_fixes" -eq "1" ]]; then
     TARGET_DESKTOP_FILE="$DESKTOP_PATH"/"$BROWSER_NAME".desktop
-
     mv "$DESKTOP_FILE" "$TARGET_DESKTOP_FILE"
+    DESKTOP_FILE="$TARGET_DESKTOP_FILE"
   fi
+
+  xdg-settings set default-web-browser "$DESKTOP_FILE"
 }
 browserbox "$@"
