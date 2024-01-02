@@ -95,7 +95,7 @@ browserbox() {
   fi
 
   if [[ "$default_browser" -eq "1" ]]; then
-    xdg-settings set default-web-browser "$DESKTOP_FILE"
+    xdg-settings set default-web-browser "$BROWSER_NAME".desktop
   fi
 }
 browserbox "$@"
