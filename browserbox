@@ -82,10 +82,10 @@ browserbox() {
   DESKTOP_FILE="$DESKTOP_PATH"/"$IMAGE_NAME"-"$BROWSER_NAME".desktop
 
   if [[ "$blink_fixes" -eq "1" && "$wayland_fixes" -eq "1" ]]; then
-    distrobox enter --additional-flags "-e BROWSER=$BROWSER_NAME" -n "$IMAGE_NAME" -- bash -c 'sudo locale-gen && distrobox-export --app "$BROWSER" --extra-flags "--ozone-platform=wayland --disable-features=WaylandFractionalScaleV1\"'
+    distrobox enter --additional-flags "-e BROWSER=$BROWSER_NAME" -n "$IMAGE_NAME" -- bash -c 'sudo locale-gen && distrobox-export --app \"$BROWSER\" --extra-flags \"--ozone-platform=wayland --disable-features=WaylandFractionalScaleV1\"'
     sed -i 's/ \/bin\/sh -l -c //' "$DESKTOP_FILE"
   else
-    distrobox enter --additional-flags "-e BROWSER=$BROWSER_NAME" -n "$IMAGE_NAME" -- bash -c 'sudo locale-gen && distrobox-export --app "$BROWSER"'
+    distrobox enter --additional-flags "-e BROWSER=$BROWSER_NAME" -n "$IMAGE_NAME" -- bash -c 'sudo locale-gen && distrobox-export --app \"$BROWSER\"'
   fi
 
   if [[ "$wayland_fixes" -eq "1" ]]; then
